@@ -23,7 +23,7 @@ clubs = loadClubs()
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', clubs=clubs)
 
 @app.route('/showSummary',methods=['POST'])
 def showSummary():
@@ -33,6 +33,7 @@ def showSummary():
     except IndexError:
         flash('Sorry, that email wasn\'t found')
         return render_template('index.html')
+
 
 
 @app.route('/book/<competition>/<club>')
@@ -68,8 +69,9 @@ def purchasePlaces():
         return render_template('welcome.html', club=club, competitions=competitions)
 
 
-# TODO: Add route for points display
-
+@app.route('/showPoints', methods=['GET'])
+def showPoints():
+    return render_template('pointTable.html', clubs=clubs, competitions=competitions)
 
 @app.route('/logout')
 def logout():
