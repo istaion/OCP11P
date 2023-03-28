@@ -56,6 +56,9 @@ def purchasePlaces():
     if date < datetime.now():
         flash('You can\'t book for a past competition')
         return render_template('welcome.html', club=club, competitions=competitions)
+    elif placesRequired > int(competition['numberOfPlaces']):
+        flash('No enough places for this competition')
+        return render_template('welcome.html', club=club, competitions=competitions)
     elif placesRequired > 12:
         flash('You can\'t book more than 12 points')
         return render_template('welcome.html', club=club, competitions=competitions)
