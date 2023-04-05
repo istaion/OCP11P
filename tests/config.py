@@ -8,7 +8,7 @@ def client():
     return client
 
 
-def mock_load_competitions():
+def mock_competitions():
     competitions = [
         {
             "name": "Spring Festival",
@@ -29,7 +29,7 @@ def mock_load_competitions():
     return competitions
 
 
-def mock_load_clubs():
+def mock_clubs():
     clubs = [
         {
             "name": "Simply Lift",
@@ -52,6 +52,6 @@ def mock_load_clubs():
 
 @pytest.fixture
 def mock_data(mocker):
-    mocker.patch.object(server, 'competitions', mock_load_competitions())
-    mocker.patch.object(server, 'clubs', mock_load_clubs())
+    mocker.patch.object(server, 'competitions', mock_competitions())
+    mocker.patch.object(server, 'clubs', mock_clubs())
     return mocker
