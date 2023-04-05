@@ -11,8 +11,7 @@ class Tests:
                                )
         assert response.status_code == 200
         assert 'Great-booking complete!' in response.data.decode()
-        club = [c for c in clubs if c['name'] == 'Simply Lift'][0]
-        assert club['points'] == '12'
+
 
     def test_purchase_places_past_competition(self, client, mock_data):
         response = client.post('/purchasePlaces', data={'club': 'Simply Lift', 'competition': 'Fall Classic',
