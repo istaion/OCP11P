@@ -38,12 +38,12 @@ class Tests:
 
     def test_purchase_places_not_enough_place(self, client, mock_data):
         response = client.post('/purchasePlaces', data={'club': 'Iron Temple',
-                                                        'competition': 'Spring Festival',
-                                                        'places': '7'
+                                                        'competition': 'test place',
+                                                        'places': '11'
                                                         }
                                )
         assert response.status_code == 200
-        assert 'have enough points' in response.data.decode()
+        assert 'No enough places' in response.data.decode()
 
 
 
