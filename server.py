@@ -53,22 +53,25 @@ def purchasePlaces():
     club = [c for c in clubs if c['name'] == request.form['club']][0]
     placesRequired = int(request.form['places'])
     date = datetime.strptime(competition['date'], "%Y-%m-%d %H:%M:%S")
+    book_authorized = True  # bolean to ckeck if the book is authorized
     if date < datetime.now():
         flash('You can\'t book for a past competition')
-        return render_template('welcome.html', club=club, competitions=competitions)
-    elif placesRequired > int(competition['numberOfPlaces']):
+        book_authorized = False
+    if placesRequired > int(competition['numberOfPlaces']):
         flash('No enough places for this competition')
-        return render_template('welcome.html', club=club, competitions=competitions)
-    elif placesRequired > 12:
+        book_authorized = False
+    if placesRequired > 12:
         flash('You can\'t book more than 12 points')
-        return render_template('welcome.html', club=club, competitions=competitions)
-    elif int(club['points']) <= placesRequired:
+        book_authorized = False
+    if int(club['points']) < placesRequired:
         flash('You don\'t have enough points')
-        return render_template('welcome.html', club=club, competitions=competitions)
-    else:
+        book_authorized = False
+    if book_authorized:
         competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
         club['points'] = int(club['points'])-placesRequired
         flash('Great-booking complete!')
+        return render_template('welcome.html', club=club, competitions=competitions)
+    else:
         return render_template('welcome.html', club=club, competitions=competitions)
 
 
