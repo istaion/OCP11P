@@ -1,5 +1,6 @@
 import json
-from flask import Flask,render_template,request,redirect,flash,url_for
+from flask import Flask, render_template, request, redirect, flash, url_for
+from datetime import datetime
 
 
 def loadClubs():
@@ -26,8 +27,13 @@ def index():
 
 @app.route('/showSummary',methods=['POST'])
 def showSummary():
-    club = [club for club in clubs if club['email'] == request.form['email']][0]
-    return render_template('welcome.html',club=club,competitions=competitions)
+    try:
+        club = [club for club in clubs if club['email'] == request.form['email']][0]
+        return render_template('welcome.html', club=club, competitions=competitions)
+    except IndexError:
+        flash('Sorry, that email was not found')
+        return render_template('index.html')
+
 
 
 @app.route('/book/<competition>/<club>')
@@ -41,18 +47,37 @@ def book(competition,club):
         return render_template('welcome.html', club=club, competitions=competitions)
 
 
-@app.route('/purchasePlaces',methods=['POST'])
+@app.route('/purchasePlaces', methods=['POST'])
 def purchasePlaces():
     competition = [c for c in competitions if c['name'] == request.form['competition']][0]
     club = [c for c in clubs if c['name'] == request.form['club']][0]
     placesRequired = int(request.form['places'])
-    competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
-    flash('Great-booking complete!')
-    return render_template('welcome.html', club=club, competitions=competitions)
+    date = datetime.strptime(competition['date'], "%Y-%m-%d %H:%M:%S")
+    book_authorized = True  # bolean to ckeck if the book is authorized
+    if date < datetime.now():
+        flash('You can\'t book for a past competition')
+        book_authorized = False
+    if placesRequired > int(competition['numberOfPlaces']):
+        flash('No enough places for this competition')
+        book_authorized = False
+    if placesRequired > 12:
+        flash('You can\'t book more than 12 points')
+        book_authorized = False
+    if int(club['points']) < placesRequired:
+        flash('You don\'t have enough points')
+        book_authorized = False
+    if book_authorized:
+        competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
+        club['points'] = int(club['points'])-placesRequired
+        flash('Great-booking complete!')
+        return render_template('welcome.html', club=club, competitions=competitions)
+    else:
+        return render_template('welcome.html', club=club, competitions=competitions)
 
 
-# TODO: Add route for points display
-
+@app.route('/showPoints', methods=['GET'])
+def showPoints():
+    return render_template('pointTable.html', clubs=clubs, competitions=competitions)
 
 @app.route('/logout')
 def logout():
