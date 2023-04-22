@@ -1,6 +1,7 @@
 import pytest
 import server
 
+
 @pytest.fixture
 def client():
     """ Allows the testing to be launched and under the Testing parameter"""
