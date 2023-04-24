@@ -1,9 +1,9 @@
-from tests.config import client
+from tests.config import client, mock_data
 import pytest
 
 
-@pytest.mark.usefixtures("client")
-class Tests:
+@pytest.mark.usefixtures('client', 'mock_data')
+class TestsUnitLogin:
     def test_index(self, client):
         response = client.get('/')
         response_data = response.data.decode()
