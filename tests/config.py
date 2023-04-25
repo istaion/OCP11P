@@ -1,5 +1,8 @@
 import pytest
 import server
+from selenium import webdriver
+from selenium.webdriver.firefox.service import Service as FirefoxService
+import os
 
 
 @pytest.fixture
@@ -56,3 +59,24 @@ def mock_data(mocker):
     mocker.patch.object(server, 'competitions', mock_competitions())
     mocker.patch.object(server, 'clubs', mock_clubs())
     return mocker
+
+
+# configuration for selenium : install_dir : path to firefox
+
+install_dir = "/snap/firefox/current/usr/lib/firefox"
+driver_loc = os.path.join(install_dir, "geckodriver")
+binary_loc = os.path.join(install_dir, "firefox")
+
+service = FirefoxService(driver_loc)
+opts = webdriver.FirefoxOptions()
+opts.binary_location = binary_loc
+
+url_root = 'http://127.0.0.1:5000/'
+
+
+def selenium_create_app():
+    app = server.app
+    app.config['TESTING'] = True
+    server.competitions = mock_competitions()
+    server.clubs = mock_clubs()
+    return app

@@ -14,7 +14,7 @@
         </thead>
         {% for club in clubs%}
         <tbody>
-            <tr>
+            <tr id="{{club['name']}}">
                 <td>{{club['name']}}</td>
                 <td>{{club['points']}}</td>
             </tr>
