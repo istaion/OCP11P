@@ -46,3 +46,11 @@ class TestsFunctional(LiveServerTestCase):
         time.sleep(1)
         points = self.driver.find_element(By.ID, 'Simply Lift').text
         assert points == 'Simply Lift 10'
+        time.sleep(1)
+        # logout
+        self.driver.back()
+        time.sleep(1)
+        button_logout = self.driver.find_element(By.ID, 'logout')
+        button_logout.click()
+        time.sleep(1)
+        assert 'Welcome to the GUDLFT Registration Portal!' == self.driver.find_element(By.TAG_NAME, 'h1').text
